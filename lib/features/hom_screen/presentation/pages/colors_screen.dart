@@ -11,7 +11,10 @@ class ColorsScreen extends StatelessWidget {
       body:SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: Image.asset(AppImages.colorsScreenImage,fit: BoxFit.fill,),
+        child: Image.asset(
+          AppImages.colorsImage,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }

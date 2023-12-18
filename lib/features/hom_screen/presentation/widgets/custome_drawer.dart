@@ -66,7 +66,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   );
                   setState(() {});
                 },
-                child: Image.asset(AppImages.alphabetImage,width: 164.w,height: 214.w,),
+                child: SingleChildScrollView(
+                    child: Image.asset(
+                  AppImages.alphabetImage,
+                  width: 164.w,
+                  height: 214.w,
+                )),
               )
             ],
           ),

@@ -19,102 +19,170 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
-      body: Padding(
-        padding: EdgeInsets.all(8.0.w),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 60.w,
-              ),
-              Center(
-                  child: CustomTitleSignLanguage(
-                fontSize: 36.w,
-              )),
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 16.w,
-                    ),
-                    Text(
-                      "Email",
-                      style: GoogleFonts.poppins(
-                          fontSize: 15.w,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87),
-                    ),
-                    SizedBox(
-                      height: 8.w,
-                    ),
-                    CustomFormTextField(
-                        validator: (String) {
-                          if (String == null || String.isEmpty) {
-                            return "this field is required";
-                          }
-                          return null;
-                        },
-                        hintText: "",
-                        keyboardType: TextInputType.emailAddress,
-                        obscureText: false,
-                        controller: context.read<LoginCubit>().emailController,
-                        suffixIcon: null,
-                        onPressedIcon: (value) {}),
-                    SizedBox(
-                      height: 32.w,
-                    ),
-                    Text(
-                      "Password",
-                      style: GoogleFonts.poppins(
-                          fontSize: 15.w,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black87),
-                    ),
-                    SizedBox(
-                      height: 8.w,
-                    ),
-                    CustomFormTextField(
-                        validator: (String) {
-                          if (String == null || String.isEmpty) {
-                            return "this field is required";
-                          }
-                          return null;
-                        },
-                        hintText: "",
-                        keyboardType: TextInputType.emailAddress,
-                        obscureText: false,
-                        controller: context.read<LoginCubit>().emailController,
-                        suffixIcon: null,
-                        onPressedIcon: (value) {}),
-                    SizedBox(
-                      height: 32.w,
-                    ),
-                    Center(
-                      child: CustomButton(text: "Login", onTap: (){
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, Routes.homeScreen, (route) => false);
-                        //   if (context
-                        //       .read<RegisterCubit>()
-                        //       .formKey
-                        //       .currentState!
-                        //       .validate()) {
-                        //     context
-                        //         .read<RegisterCubit>().register();
-                        //   }
-                      }, backgroundColor: Colors.white, borderColor: Colors.white),
-                    )
-                  ],
-                ),
-              )
-            ],
+      body: BlocConsumer<LoginCubit, LoginState>(listener: (context, state) {
+        if (state is LoginFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('register failure1')),
+          );
+          return _showAlertDialog(context);
+        } else if (state is LoginSuccess) {
+          // CacheHelper.saveData(stringToken: state.model.token!);
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.homeScreen, (route) => false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('register success')),
+          );
+        }
+      }, builder: (context, state) {
+        if (state is LoginLoading) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          );
+        } else {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+                key: context.read<LoginCubit>().formKey,
+                child: SingleChildScrollView(
+                  reverse: true, // this is new
+                  physics: BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 68.w,
+                      ),
+                      CustomTitleSignLanguage(
+                        fontSize: 36.sp,
+                      ),
+                      SizedBox(
+                        height: 8.w,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Email",
+                            style: GoogleFonts.poppins(
+                                color: Colors.black87,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            height: 8.w,
+                          ),
+                          CustomFormTextField(
+                            validator: (String) {
+                              if (String == null || String.isEmpty) {
+                                return "this field is required";
+                              }
+                              return null;
+                            },
+                            hintText: "",
+                            keyboardType: TextInputType.emailAddress,
+                            controller:
+                                context.read<LoginCubit>().emailController,
+                            suffixIcon: null,
+                            obscureText: false,
+                          ),
+                          SizedBox(
+                            height: 24.w,
+                          ),
+                          Text(
+                            "Password",
+                            style: GoogleFonts.poppins(
+                                color: Colors.black87,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          SizedBox(
+                            height: 24.w,
+                          ),
+                          CustomFormTextField(
+                            validator: (String) {
+                              if (String == null || String.isEmpty) {
+                                return "this field is required";
+                              }
+                              return null;
+                            },
+                            hintText: "",
+                            keyboardType: TextInputType.visiblePassword,
+                            controller:
+                                context.read<LoginCubit>().passController,
+                            suffixIcon:
+                                const Icon(CupertinoIcons.eye_slash_fill),
+                            onPressedIcon: () {
+                              context.read<LoginCubit>().obscureTextFunction();
+                            },
+                            obscureText: context.read<LoginCubit>().obscureText,
+                          ),
+                          SizedBox(
+                            height: 24.w,
+                          ),
+                          Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: CustomButton(
+                                text: "Sign in",
+                                onTap: () {
+                                  if (context
+                                      .read<LoginCubit>()
+                                      .formKey
+                                      .currentState!
+                                      .validate()) {
+                                    // context
+                                    //     .read<LoginCubit>().login();
+                                    ////>>>>>>>>>>>>>>>>>>>>>>.
+                                    Navigator.pushNamedAndRemoveUntil(context,
+                                        Routes.homeScreen, (route) => false);
+                                  }
+                                },
+                                backgroundColor: Colors.white,
+                                borderColor: Colors.white,
+                                width: 230,
+                                height: 48,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          );
+        }
+      }),
+    );
+  }
+
+  void _showAlertDialog(context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: const Text('Error'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Register Failed'),
+              ],
+            ),
           ),
-        ),
-      ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

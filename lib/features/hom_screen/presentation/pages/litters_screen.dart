@@ -11,7 +11,10 @@ class AlphabetScreen extends StatelessWidget {
       body:SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: Image.asset(AppImages.alphabetsScreenImage,fit: BoxFit.fill,),
+        child: Image.asset(
+          AppImages.alphabetImage,
+          fit: BoxFit.fill,
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sigin_lang_app/config/routes/routes.dart';
 import 'package:sigin_lang_app/core/utils/app_colors.dart';
 import 'package:sigin_lang_app/core/utils/app_icons.dart';
 import 'package:sigin_lang_app/features/language_to_sign_screen/presentation/pages/language_to_sign.dart';
@@ -93,24 +94,28 @@ class HomeScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      children: [
-                        CustomCircleIconButton(
-                          width: 90,
-                          height: 90,
-                          icon: Icons.camera_alt_outlined,
-                          iconSize: 35,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignToLanguageScreen()));
-                          },
-                        ),
-                        Text("Camera", style: GoogleFonts.poppins(color: AppColors.secondaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.sp),)
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          CustomCircleIconButton(
+                            width: 90,
+                            height: 90,
+                            icon: Icons.camera_alt_outlined,
+                            iconSize: 35,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.signToLanguageScreen);
+                            },
+                          ),
+                          Text(
+                            "Camera",
+                            style: GoogleFonts.poppins(
+                                color: AppColors.secondaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.sp),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
                       width: 20.w,
@@ -126,13 +131,21 @@ class HomeScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LanguageToSignScreen()));
+                                    builder: (context) =>
+                                        LanguageToSignScreen()));
                           },
                         ),
-                        Text("Write", style: GoogleFonts.poppins(color: AppColors.secondaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.sp),)
+                        Text(
+                          "Write",
+                          style: GoogleFonts.poppins(
+                              color: AppColors.secondaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.sp),
+                        )
                       ],
+                    ),
+                    SizedBox(
+                      width: 50.w,
                     ),
                   ],
                 ),

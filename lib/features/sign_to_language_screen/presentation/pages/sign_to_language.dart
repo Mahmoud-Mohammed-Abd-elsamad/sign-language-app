@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sigin_lang_app/config/routes/routes.dart';
 import 'package:sigin_lang_app/core/utils/app_colors.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:sigin_lang_app/features/sign_to_language_screen/domain/entities/sign_to_language_body.dart';
+import 'package:sigin_lang_app/features/sign_to_language_screen/presentation/manager/sign_to_language_cubit.dart';
+import 'package:video_player/video_player.dart';
 import '../../../../core/utils/componants/custom_icon_button.dart';
 import 'camera_page/camera_page.dart';
 
@@ -21,6 +25,8 @@ class SignToLanguageScreen extends StatefulWidget {
 
 class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
   String imagePath = "";
+  late VideoPlayerController _controller;
+  bool hasVideo = false;
 
   FlutterTts flutterTts = FlutterTts();
 
@@ -30,7 +36,32 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
     await flutterTts.setVolume(1.0);
   }
 
+  @override
+  void initState() {
+    super.initState();
 
+    if (CameraPage.videos != null) {
+      print(
+          "======================1  hasVideo $hasVideo ===================================");
+
+      hasVideo = true;
+      _controller = VideoPlayerController.file(File(CameraPage.videos!))
+        ..initialize().then((_) {
+          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+          setState(() {});
+        });
+    } else {
+      print(
+          "====================== 2 hasVideo $hasVideo ===================================");
+      hasVideo = false;
+      _controller = VideoPlayerController.networkUrl(
+          Uri(path: "https://youtu.be/mBqQPxQLSfc?si=HttOlGa592Bno8ou"))
+        ..initialize().then((_) {
+          // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+          setState(() {});
+        });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +92,15 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
             ),
             Stack(children: [
               Container(
-                height: 500.w,
-                width: 350.w,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10.w))),
-              ),
+                  height: 500.w,
+                  width: 350.w,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(10.w))),
+                  child: Center(
+                      child: hasVideo
+                          ? VideoPlayer(_controller)
+                          : Text("Take Video For Translate It"))),
               Positioned(
                 top: 400,
                 right: 15,
@@ -80,7 +114,7 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
                       child: Text(
                     "hello iam mahmoud",
                     style: GoogleFonts.poppins(
-                        color: Colors.black87,
+                        color: hasVideo ? Colors.white : Colors.amber,
                         fontWeight: FontWeight.w500,
                         fontSize: 21.sp),
                   )),
@@ -96,10 +130,33 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
                 height: 50,
                 icon: CupertinoIcons.speaker_1_fill,
                 iconSize: 25,
-                onTap: (){
-                    speakText();
+                onTap: () {
+                  speakText();
                 },
               ),
+              Spacer(),
+              CustomCircleIconButton(
+                width: 50,
+                height: 50,
+                icon: Icons.send,
+                iconSize: 25,
+                onTap: () {
+                  {
+                    setState(() {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                    });
+                  }
+                  context
+                      .read<SignToLanguageCubit>()
+                      .signToLanguageTranslateVideo(SignToLanguageBody(
+                          name: "name",
+                          email: "email",
+                          password: "password",
+                          rePassword: "rePassword"));
+                },
+              )
             ]),
             Row(
               children: [
@@ -125,10 +182,8 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
                   icon: Icons.camera_alt_outlined,
                   iconSize: 30,
                   onTap: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CameraPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CameraPage()));
                     setState(() {});
                   },
                 ),
@@ -139,6 +194,7 @@ class _SignToLanguageScreenState extends State<SignToLanguageScreen> {
       )),
     );
   }
+
   void speakText() async {
     await flutterTts.speak("Hello iam Mahmoud");
   }

@@ -25,7 +25,7 @@ class RegisterScreen extends StatelessWidget {
           listener: (context, state) {
             if(state is RegisterFailure){
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('register failure')),
+                const SnackBar(content: Text('register failure1')),
               );
               return _showAlertDialog(context);
             }else if(state is RegisterSuccess){
@@ -37,180 +37,202 @@ class RegisterScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Form(
-                key: context.read<RegisterCubit>().formKey,
-                child: SingleChildScrollView(
-                  reverse: true, // this is new
-                  physics: BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 68.w,
-                      ),
-                      CustomTitleSignLanguage(
-                        fontSize: 36.sp,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 16.w,
-                            ),
-                            Text(
-                              "Full Name",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.black87,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 8.w,
-                            ),
-                            CustomFormTextField(
-                              validator: (String) {
-                                if (String == null || String.isEmpty) {
-                                  return "this field is required";
-                                }
-                                return null;
-                              },
-                              hintText: "",
-                              keyboardType: TextInputType.name,
-                              controller:
-                                  context.read<RegisterCubit>().nameController,
-                              suffixIcon: null,
-                              onPressedIcon: (value) {},
-                              obscureText: false,
-                            ),
-                            SizedBox(
-                              height: 24.w,
-                            ),
-                            Text(
-                              "Email",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.black87,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 8.w,
-                            ),
-                            CustomFormTextField(
-                              validator: (String) {
-                                if (String == null || String.isEmpty) {
-                                  return "this field is required";
-                                }
-                                return null;
-                              },
-                              hintText: "",
-                              keyboardType: TextInputType.emailAddress,
-                              controller:
-                                  context.read<RegisterCubit>().emailController,
-                              suffixIcon: null,
-                              onPressedIcon: (value) {},
-                              obscureText: false,
-                            ),
-                            SizedBox(
-                              height: 24.w,
-                            ),
-                            Text(
-                              "Password",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.black87,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 8.w,
-                            ),
-                            CustomFormTextField(
-                              validator: (String) {
-                                if (String == null || String.isEmpty) {
-                                  return "this field is required";
-                                }
-                                return null;
-                              },
-                              hintText: "",
-                              keyboardType: TextInputType.visiblePassword,
-                              controller:
-                                  context.read<RegisterCubit>().passController,
-                              suffixIcon:
-                                  const Icon(CupertinoIcons.eye_slash_fill),
-                              onPressedIcon: (value) {
-                                value = !value;
-                                print("sdfsdfsdfsdfsdf  ${value}   4");
-                              },
-                              obscureText: true,
-                            ),
-                            SizedBox(
-                              height: 24.w,
-                            ),
-                            Text(
-                              "Confirm Password",
-                              style: GoogleFonts.poppins(
-                                  color: Colors.black87,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            SizedBox(
-                              height: 8.w,
-                            ),
-                            CustomFormTextField(
-                              validator: (String) {
-                                if (String == null || String.isEmpty) {
-                                  return "this field is required";
-                                }
-                                return null;
-                              },
-                              hintText: "",
-                              keyboardType: TextInputType.visiblePassword,
-                              controller:
-                                  context.read<RegisterCubit>().repassController,
-                              suffixIcon: const Icon(
-                                CupertinoIcons.check_mark_circled,
-                                size: 25,
+            if (state is RegisterLoading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Form(
+                  key: context.read<RegisterCubit>().formKey,
+                  child: SingleChildScrollView(
+                    reverse: true, // this is new
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 68.w,
+                        ),
+                        CustomTitleSignLanguage(
+                          fontSize: 36.sp,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 16.w,
                               ),
-                              onPressedIcon: (value) {},
-                              obscureText: false,
-                            ),
-                            SizedBox(
-                              height: 24.w,
-                            ),
-                            Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    bottom:
-                                        MediaQuery.of(context).viewInsets.bottom),
-                                child: CustomButton(
-                                  text: "Sign up",
-                                  onTap: () {
-                                    // Navigator.pushNamedAndRemoveUntil(context,
-                                    //    Routes.homeScreen, (route) => false);
+                              Text(
+                                "Full Name",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.black87,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                height: 8.w,
+                              ),
+                              CustomFormTextField(
+                                validator: (String) {
+                                  if (String == null || String.isEmpty) {
+                                    return "this field is required";
+                                  }
+                                  return null;
+                                },
+                                hintText: "",
+                                keyboardType: TextInputType.name,
+                                controller: context
+                                    .read<RegisterCubit>()
+                                    .nameController,
+                                suffixIcon: null,
+                                obscureText: false,
+                                onPressedIcon: () {},
+                              ),
+                              SizedBox(
+                                height: 24.w,
+                              ),
+                              Text(
+                                "Email",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.black87,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                height: 8.w,
+                              ),
+                              CustomFormTextField(
+                                validator: (String) {
+                                  if (String == null || String.isEmpty) {
+                                    return "this field is required";
+                                  }
+                                  return null;
+                                },
+                                hintText: "",
+                                keyboardType: TextInputType.emailAddress,
+                                controller:
+                                context.read<RegisterCubit>().emailController,
+                                suffixIcon: null,
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 24.w,
+                              ),
+                              Text(
+                                "Password",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.black87,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                height: 8.w,
+                              ),
+                              CustomFormTextField(
+                                validator: (String) {
+                                  if (String == null || String.isEmpty) {
+                                    return "this field is required";
+                                  }
+                                  return null;
+                                },
+                                hintText: "",
+                                keyboardType: TextInputType.visiblePassword,
+                                controller: context
+                                    .read<RegisterCubit>()
+                                    .passController,
+                                suffixIcon:
+                                    const Icon(CupertinoIcons.eye_slash_fill),
+                                onPressedIcon: () {
+                                  context
+                                      .read<RegisterCubit>()
+                                      .obscureTextFunction();
+                                },
+                                obscureText:
+                                    context.read<RegisterCubit>().obscureText,
+                              ),
+                              SizedBox(
+                                height: 24.w,
+                              ),
+                              Text(
+                                "Confirm Password",
+                                style: GoogleFonts.poppins(
+                                    color: Colors.black87,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                height: 8.w,
+                              ),
+                              CustomFormTextField(
+                                validator: (String) {
+                                  if (String == null || String.isEmpty) {
+                                    return "this field is required";
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  context
+                                      .read<RegisterCubit>()
+                                      .confirmPasswordFunction(value);
+                                },
+                                hintText: "",
+                                keyboardType: TextInputType.visiblePassword,
+                                controller: context
+                                    .read<RegisterCubit>()
+                                    .confirmPasswordController,
+                                suffixIcon: Icon(
+                                  CupertinoIcons.check_mark_circled,
+                                  size: 25,
+                                  color: context
+                                          .read<RegisterCubit>()
+                                          .confirmPassword
+                                      ? AppColors.secondaryColor
+                                      : null,
+                                ),
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 24.w,
+                              ),
+                              Center(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                                  child: CustomButton(
+                                    text: "Sign up",
+                                    onTap: () {
                                       if (context
                                           .read<RegisterCubit>()
                                           .formKey
                                           .currentState!
                                           .validate()) {
                                         context
-                                            .read<RegisterCubit>().register();
+                                            .read<RegisterCubit>()
+                                            .register();
                                       }
-                                  },
-                                  backgroundColor: Colors.white,
-                                  borderColor: Colors.white,
+                                    },
+                                    backgroundColor: Colors.white,
+                                    borderColor: Colors.white,
+                                    width: 230,
+                                    height: 48,
+                                  ),
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
       ),

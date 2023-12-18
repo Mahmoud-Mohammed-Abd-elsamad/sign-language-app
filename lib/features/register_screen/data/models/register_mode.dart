@@ -1,28 +1,21 @@
-import '../../domain/entities/register_entity.dart';
+import 'package:sigin_lang_app/features/register_screen/domain/entities/register_entity.dart';
 
-class RegisterModel extends RegisterEntity{
+class RegisterModel extends RegisterEntity {
   String? message;
 
-  RegisterModel({this.message, super.user, super.token});
+  RegisterModel({super.status, super.resultCode, this.message});
 
   RegisterModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    resultCode = json['resultCode'];
     message = json['message'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
-    token = json['token'];
   }
 
-}
-
-class User extends UserEntity {
-
-  String? role;
-
-  User({super.name, super.email, this.role});
-
-  User.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    email = json['email'];
-    role = json['role'];
-  }
-
+// Map<String, dynamic> toJson() {
+//   final Map<String, dynamic> data = new Map<String, dynamic>();
+//   data['status'] = this.status;
+//   data['resultCode'] = this.resultCode;
+//   data['message'] = this.message;
+//   return data;
+// }
 }

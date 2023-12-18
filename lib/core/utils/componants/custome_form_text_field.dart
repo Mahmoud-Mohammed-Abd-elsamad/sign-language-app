@@ -3,18 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomFormTextField extends StatefulWidget {
-   CustomFormTextField({
-    super.key,required this.validator,required this.hintText,
-     required this.keyboardType,required this.obscureText,required this.controller,required this.suffixIcon,required this.onPressedIcon
-  });
+   CustomFormTextField(
+      {super.key,
+      required this.validator,
+      required this.hintText,
+      required this.keyboardType,
+      required this.obscureText,
+      required this.controller,
+      this.suffixIcon,
+      this.onPressedIcon,
+      this.onChanged});
 
   String? Function(String?)? validator;
-   String? hintText;
-   TextInputType keyboardType;
-   bool obscureText;
-   TextEditingController controller;
-   Widget? suffixIcon;
-    void Function(bool) onPressedIcon;
+  String? hintText;
+  TextInputType keyboardType;
+  bool obscureText;
+  TextEditingController controller;
+  Widget? suffixIcon;
+  void Function()? onPressedIcon;
+  void Function(String)? onChanged;
 
   @override
   State<CustomFormTextField> createState() => _CustomFormTextFieldState();
@@ -24,21 +31,23 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 287.w,
-      height: 48.w,
+      width: 326.w,
+      height: 50.w,
       child: TextFormField(
-
+        onChanged: widget.onChanged,
         validator: widget.validator,
         keyboardType: widget.keyboardType,
-        obscureText:widget.obscureText ,
+        obscureText: widget.obscureText,
         controller: widget.controller,
         decoration: InputDecoration(
-            suffixIcon: IconButton(onPressed:(){
-              widget.onPressedIcon(widget.obscureText);
-              setState(() {
-                  print("okokpk");
-              });
-            }, icon: widget.suffixIcon ?? Container(height: 0,width: 0,),),
+            suffixIcon: IconButton(
+              onPressed: widget.onPressedIcon,
+              icon: widget.suffixIcon ??
+                  Container(
+                    height: 0,
+                    width: 0,
+                  ),
+            ),
             filled: true,
             fillColor: Colors.white,
             hintText: widget.hintText,
@@ -47,9 +56,9 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
                 //borderRadius: BorderRadius.circular(20),
 
                 //borderSide: BorderSide(color: Colors.white, width: 2)
-            ),
+                ),
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20),
               borderSide: const BorderSide(
                   width: 0, color: Colors.white),
             ),focusedBorder: OutlineInputBorder(
